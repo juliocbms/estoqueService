@@ -20,7 +20,10 @@ public class productControler {
     private ProdutoService produtoService;
 
 
+
+
     @PostMapping
+    @Tag(name = "Salvar Produtos", description = "salva produtos")
     public ResponseEntity<Product> insert (@RequestBody Product product){
         product = produtoService.saveProduto(product);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -43,14 +46,28 @@ public class productControler {
     }
 
     @DeleteMapping(value = "/{id}")
+    @Tag(name = "Deletar Produtos", description = "deleta produtos")
     public ResponseEntity<Void> deletarById(@PathVariable Long id){
        produtoService.deletarProduto(id);
        return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/{id}")
+    @Tag(name = "Atualizar Produtos", description = "atualiza produtos")
     public ResponseEntity<Product> atualizarProduto(@PathVariable Long id, @RequestBody Product product){
         product = produtoService.atualizarProduto(id,product);
         return ResponseEntity.ok().body(product);
+    }
+
+    @PatchMapping("/{id}/add-stock")
+    public ResponseEntity<Product> adicionarEstoque(@PathVariable Long id, @RequestParam int quantidade) {
+       Product product = produtoService.adicionarEstoque(id, quantidade);
+        return  ResponseEntity.ok().body(product);
+    }
+
+    @PatchMapping("/{id}/remove-stock")
+    public ResponseEntity<Product> removerEstoque(@PathVariable Long id, @RequestParam int quantidade) {
+       Product product = produtoService.removerEstoque(id, quantidade);
+        return  ResponseEntity.ok().body(product);
     }
 }

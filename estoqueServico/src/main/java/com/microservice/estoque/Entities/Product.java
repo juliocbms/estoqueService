@@ -3,27 +3,36 @@ package com.microservice.estoque.Entities;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_product")
-public class Produto {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    private String descricao;
     private BigDecimal preco;
     private int quantidadeEstoque;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public Produto() {
+    public Product() {
     }
 
-    public Produto(Long id, String nome, BigDecimal preco, int quantidadeEstoque) {
+    public Product(Long id, String nome, String descricao, BigDecimal preco, int quantidadeEstoque, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.nome = nome;
+        this.descricao = descricao;
         this.preco = preco;
         this.quantidadeEstoque = quantidadeEstoque;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Long getId() {
@@ -42,6 +51,14 @@ public class Produto {
         this.nome = nome;
     }
 
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
     public BigDecimal getPreco() {
         return preco;
     }
@@ -58,14 +75,23 @@ public class Produto {
         this.quantidadeEstoque = quantidadeEstoque;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Produto produto = (Produto) o;
-        return Objects.equals(id, produto.id);
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void adicionarNoEstoque(Long id,int total,int quantidadeAdicionada){
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void adicionarNoEstoque( int quantidadeAdicionada){
         if (quantidadeAdicionada <= 0){
             throw new IllegalArgumentException("A quantidade a ser adicionada deve ser maior que 0.");
         }

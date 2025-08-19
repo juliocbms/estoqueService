@@ -1,6 +1,6 @@
 package com.microservice.estoque.Config;
 
-import com.microservice.estoque.Entities.Produto;
+import com.microservice.estoque.Entities.Product;
 import com.microservice.estoque.Repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -8,7 +8,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Date;
 
 @Configuration
 @Profile("test")
@@ -22,11 +24,11 @@ public class TestConfig implements CommandLineRunner {
 
         productRepository.deleteAll();
 
-        Produto p1 = new Produto(null, "Maça", new BigDecimal(7.00),10);
-        Produto p2 = new Produto(null, "Laranja", new BigDecimal("5.50"), 25);
-        Produto p3 = new Produto(null, "Pão de Forma", new BigDecimal("8.99"), 5);
-        Produto p4 = new Produto(null, "Leite Integral", new BigDecimal("4.25"), 30);
-        Produto p5 = new Produto(null, "Ovo (dúzia)", new BigDecimal("12.50"), 15);
+        Product p1 = new Product(null, "Maça","Unidade maça", new BigDecimal(7.00),10, LocalDateTime.now(),null);
+        Product p2 = new Product(null, "Laranja","Unidade laranja", new BigDecimal("5.50"), 25, LocalDateTime.now(),null);
+        Product p3 = new Product(null, "Pão de Forma","Unidade Pão de forma", new BigDecimal("8.99"), 5,LocalDateTime.now(),null);
+        Product p4 = new Product(null, "Leite Integral","Caixa de leite", new BigDecimal("4.25"), 30,LocalDateTime.now(),null);
+        Product p5 = new Product(null, "Ovo (dúzia)","12 ovos", new BigDecimal("12.50"), 15,LocalDateTime.now(),null);
 
         productRepository.saveAll(Arrays.asList(p1,p2,p3,p4,p5));
 

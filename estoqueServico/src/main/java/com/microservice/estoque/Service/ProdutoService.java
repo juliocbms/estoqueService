@@ -1,12 +1,13 @@
 package com.microservice.estoque.Service;
 
-import com.microservice.estoque.Entities.Produto;
+import com.microservice.estoque.Entities.Product;
 import com.microservice.estoque.Repositories.ProductRepository;
 
 import com.microservice.estoque.Service.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,28 +17,29 @@ public class ProdutoService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<Produto> findAll(){
+    public List<Product> findAll(){
         return productRepository.findAll();
     }
     
-    public Produto findById(Long id){
-        Optional<Produto> produto = productRepository.findById(id);
+    public Product findById(Long id){
+        Optional<Product> produto = productRepository.findById(id);
         return produto.orElseThrow(()-> new ObjectNotFoundException(id));
     }
 
-    public Produto saveProduto(Produto produto){
-        return productRepository.save(produto);
+    public Product saveProduto(Product product){
+        return productRepository.save(product);
     }
 
-    public Produto atualizarProduto( Produto produto){
-        Produto newProduto = findById(produto.getId());
-        updateData(newProduto,produto);
-        return productRepository.save(newProduto);
+    public Product atualizarProduto(Product product){
+        Product newProduct = findById(product.getId());
+        updateData(newProduct, product);
+        return productRepository.save(newProduct);
     }
 
-    private void updateData(Produto newProduto, Produto produto){
-        newProduto.setNome(produto.getNome());
-        newProduto.setPreco(produto.getPreco());
-        newProduto.setQuantidadeEstoque(produto.getQuantidadeEstoque());
+    private void updateData(Product newProduct, Product product){
+        newProduct.setNome(product.getNome());
+        newProduct.setPreco(product.getPreco());
+        newProduct.setQuantidadeEstoque(product.getQuantidadeEstoque());
+        newProduct.setUpdatedAt(LocalDateTime.now());
     }
 }

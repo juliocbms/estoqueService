@@ -30,10 +30,15 @@ public class ProdutoService {
         return productRepository.save(product);
     }
 
-    public Product atualizarProduto(Product product){
-        Product newProduct = findById(product.getId());
+    public Product atualizarProduto(Long id, Product product){
+        Product newProduct = productRepository.getReferenceById(id);
         updateData(newProduct, product);
         return productRepository.save(newProduct);
+    }
+
+    public void deletarProduto(Long id){
+        findById(id);
+        productRepository.deleteById(id);
     }
 
     private void updateData(Product newProduct, Product product){

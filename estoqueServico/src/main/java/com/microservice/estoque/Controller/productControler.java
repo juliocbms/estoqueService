@@ -2,17 +2,17 @@ package com.microservice.estoque.Controller;
 
 import com.microservice.estoque.Entities.Product;
 import com.microservice.estoque.Service.ProdutoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(value = "/products")
 public class productControler {
 
@@ -26,5 +26,31 @@ public class productControler {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(product.getId()).toUri();
         return ResponseEntity.created(uri).body(product);
+    }
+
+    @GetMapping
+    @Tag(name = "Lista Produtos", description = "retorna uma lista de produtos")
+    public ResponseEntity<List<Product>> findAll(){
+        List<Product> list = produtoService.findAll();
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/{id}")
+    @Tag(name = "Porduto por ID", description = "retorna um produto por Id")
+    public ResponseEntity<Product> findById(@PathVariable Long id){
+        Product product = produtoService.findById(id);
+        return ResponseEntity.ok().body(product);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deletarById(@PathVariable Long id){
+       produtoService.deletarProduto(id);
+       return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Product> atualizarProduto(@PathVariable Long id, @RequestBody Product product){
+        product = produtoService.atualizarProduto(id,product);
+        return ResponseEntity.ok().body(product);
     }
 }

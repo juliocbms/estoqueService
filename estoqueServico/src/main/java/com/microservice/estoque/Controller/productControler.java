@@ -2,6 +2,7 @@ package com.microservice.estoque.Controller;
 
 import com.microservice.estoque.DTO.EstoqueDTO;
 import com.microservice.estoque.DTO.ProductDTO;
+import com.microservice.estoque.DTO.ProductUpdateDTO;
 import com.microservice.estoque.Entities.Product;
 import com.microservice.estoque.Service.ProdutoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,8 +58,8 @@ public class productControler {
 
     @PutMapping(value = "/{id}")
     @Tag(name = "Atualizar Produtos", description = "atualiza produtos")
-    public ResponseEntity<Product> atualizarProduto(@PathVariable Long id, @RequestBody ProductDTO productDTO){
-        Product product = produtoService.fromDTO(productDTO);
+    public ResponseEntity<Product> atualizarProduto(@PathVariable Long id, @RequestBody ProductUpdateDTO productDTO){
+        Product product = produtoService.fromUpdateDTO(productDTO);
         product.setId(id);
         product = produtoService.atualizarProduto(id,product);
         return ResponseEntity.ok().body(product);

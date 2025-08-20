@@ -1,5 +1,7 @@
 package com.microservice.estoque.Controller;
 
+import com.microservice.estoque.DTO.EstoqueDTO;
+import com.microservice.estoque.DTO.ProductDTO;
 import com.microservice.estoque.Entities.Product;
 import com.microservice.estoque.Service.ProdutoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/products")
@@ -24,7 +27,8 @@ public class productControler {
 
     @PostMapping
     @Tag(name = "Salvar Produtos", description = "salva produtos")
-    public ResponseEntity<Product> insert (@RequestBody Product product){
+    public ResponseEntity<Product> insert (@RequestBody ProductDTO productDTO){
+        Product product = produtoService.fromDTO(productDTO);
         product = produtoService.saveProduto(product);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(product.getId()).toUri();
@@ -33,9 +37,10 @@ public class productControler {
 
     @GetMapping
     @Tag(name = "Lista Produtos", description = "retorna uma lista de produtos")
-    public ResponseEntity<List<Product>> findAll(){
+    public ResponseEntity<List<ProductDTO>> findAll(){
         List<Product> list = produtoService.findAll();
-        return ResponseEntity.ok().body(list);
+        List<ProductDTO> listDTO = list.stream().map(x -> new ProductDTO(x)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDTO);
     }
 
     @GetMapping(value = "/{id}")
@@ -54,20 +59,26 @@ public class productControler {
 
     @PutMapping(value = "/{id}")
     @Tag(name = "Atualizar Produtos", description = "atualiza produtos")
-    public ResponseEntity<Product> atualizarProduto(@PathVariable Long id, @RequestBody Product product){
-        product = produtoService.atualizarProduto(id,product);
-        return ResponseEntity.ok().body(product);
+    public ResponseEntity<Product> atualizarProduto(@PathVariable Long id, @RequestBody ProductDTO productDTO){
+        Product product = produtoService.fromDTO(productDTO);
+        product.setId(id);
+        product = produtoService.atualizarProduto(product);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/add-stock")
-    public ResponseEntity<Product> adicionarEstoque(@PathVariable Long id, @RequestParam int quantidade) {
-       Product product = produtoService.adicionarEstoque(id, quantidade);
-        return  ResponseEntity.ok().body(product);
+    public ResponseEntity<Product> adicionarEstoque(@PathVariable Long id, @RequestBody EstoqueDTO estoqueDTO) {
+       Product product = produtoService.findById(id);
+       product.adicionarNoEstoque(estoqueDTO.getQuantidade());
+       produtoService.saveProduto(product);
+        return ResponseEntity.ok().body(product);
     }
 
     @PatchMapping("/{id}/remove-stock")
-    public ResponseEntity<Product> removerEstoque(@PathVariable Long id, @RequestParam int quantidade) {
-       Product product = produtoService.removerEstoque(id, quantidade);
+    public ResponseEntity<Product> removerEstoque(@PathVariable Long id, @RequestBody EstoqueDTO estoqueDTO) {
+       Product product = produtoService.findById(id);
+       product.removerNoEstoque(estoqueDTO.getQuantidade());
+       produtoService.saveProduto(product);
         return  ResponseEntity.ok().body(product);
     }
 }

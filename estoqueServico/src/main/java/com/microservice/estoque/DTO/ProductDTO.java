@@ -1,22 +1,39 @@
 package com.microservice.estoque.DTO;
 
+import com.microservice.estoque.Entities.Product;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class ProductDTO {
 
+    private Long id;
     private String name;
     private String descricao;
     private BigDecimal price;
     private int quantidadeEstoque;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(String name, String descricao, BigDecimal price, int quantidadeEstoque) {
-        this.name = name;
-        this.descricao = descricao;
-        this.price = price;
-        this.quantidadeEstoque = quantidadeEstoque;
+    public ProductDTO(Product product) {
+        id = product.getId();
+        name = product.getNome();
+        descricao = product.getDescricao();
+        price = product.getPreco();
+        quantidadeEstoque = product.getQuantidadeEstoque();
+        createdAt = product.getCreatedAt();
+        updatedAt = product.getUpdatedAt();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -49,5 +66,21 @@ public class ProductDTO {
 
     public void setQuantidadeEstoque(int quantidadeEstoque) {
         this.quantidadeEstoque = quantidadeEstoque;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

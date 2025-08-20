@@ -1,5 +1,6 @@
 package com.microservice.estoque.Service;
 
+import com.microservice.estoque.DTO.ProductDTO;
 import com.microservice.estoque.Entities.Product;
 import com.microservice.estoque.Repositories.ProductRepository;
 
@@ -34,8 +35,8 @@ public class ProdutoService {
         return productRepository.save(product);
     }
 
-    public Product atualizarProduto(Long id, Product product){
-        Product newProduct = productRepository.getReferenceById(id);
+    public Product atualizarProduto(Product product){
+        Product newProduct = findById(product.getId());
         updateData(newProduct, product);
         return productRepository.save(newProduct);
     }
@@ -75,5 +76,9 @@ public class ProdutoService {
         newProduct.setPreco(product.getPreco());
         newProduct.setQuantidadeEstoque(product.getQuantidadeEstoque());
         newProduct.setUpdatedAt(LocalDateTime.now());
+    }
+
+    public Product fromDTO(ProductDTO productDTO){
+        return  new Product(productDTO.getId(), productDTO.getName(), productDTO.getDescricao(), productDTO.getPrice(), productDTO.getQuantidadeEstoque(),productDTO.getCreatedAt(),null);
     }
 }

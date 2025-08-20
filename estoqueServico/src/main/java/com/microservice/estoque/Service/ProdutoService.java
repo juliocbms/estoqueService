@@ -40,8 +40,8 @@ public class ProdutoService {
            Product newProduct = productRepository.getReferenceById(id);
            updateData(newProduct, product);
            return productRepository.save(newProduct);
-       }catch (ResourceNotFoundException e){
-           throw  new ResourceNotFoundException(id);
+       }  catch (DataIntegrityViolationException e){
+           throw  new DatabaseException(e.getMessage());
        }
     }
 

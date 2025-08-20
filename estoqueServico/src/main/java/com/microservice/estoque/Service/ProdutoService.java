@@ -35,12 +35,17 @@ public class ProdutoService {
         return productRepository.save(product);
     }
 
-    public Product atualizarProduto(Product product){
-        Product newProduct = findById(product.getId());
-        updateData(newProduct, product);
-        return productRepository.save(newProduct);
+    public Product atualizarProduto(Long id, Product product){
+       try {
+           Product newProduct = productRepository.getReferenceById(id);
+           updateData(newProduct, product);
+           return productRepository.save(newProduct);
+       }catch (ResourceNotFoundException e){
+           throw  new ResourceNotFoundException(id);
+       }
     }
 
+    @Transactional
     public void deletarProduto(Long id){
        try {
            productRepository.deleteById(id);
@@ -55,20 +60,39 @@ public class ProdutoService {
 
     @Transactional
     public Product adicionarEstoque(Long id, int quantidade) {
-        Product produto = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
-        produto.adicionarNoEstoque(quantidade);
-        produto.setUpdatedAt(LocalDateTime.now());
-        return productRepository.save(produto);
+        try{
+            Product produto = productRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(id));
+            produto.adicionarNoEstoque(quantidade);
+            produto.setUpdatedAt(LocalDateTime.now());
+            return productRepository.save(produto);
+        }  catch (DataIntegrityViolationException e){
+            throw  new DatabaseException(e.getMessage());
+        }
     }
 
     @Transactional
     public Product removerEstoque(Long id, int quantidade) {
-        Product produto = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
-        produto.removerNoEstoque(quantidade);
-        produto.setUpdatedAt(LocalDateTime.now());
-        return productRepository.save(produto);
+        try{
+            Product produto = productRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(id));
+            produto.removerNoEstoque(quantidade);
+            produto.setUpdatedAt(LocalDateTime.now());
+            return productRepository.save(produto);
+        }  catch (DataIntegrityViolationException e){
+            throw  new DatabaseException(e.getMessage());
+        }
+    }
+
+    public boolean isAvailable(Long id ){
+        try {
+            Product product = productRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
+            return product.getQuantidadeEstoque() > 0;
+        }  catch (DataIntegrityViolationException e){
+            throw  new DatabaseException(e.getMessage());
+        }
+
     }
 
     private void updateData(Product newProduct, Product product){

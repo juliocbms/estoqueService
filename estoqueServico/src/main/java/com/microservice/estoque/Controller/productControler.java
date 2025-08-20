@@ -23,8 +23,6 @@ public class productControler {
     private ProdutoService produtoService;
 
 
-
-
     @PostMapping
     @Tag(name = "Salvar Produtos", description = "salva produtos")
     public ResponseEntity<Product> insert (@RequestBody ProductDTO productDTO){
@@ -62,23 +60,28 @@ public class productControler {
     public ResponseEntity<Product> atualizarProduto(@PathVariable Long id, @RequestBody ProductDTO productDTO){
         Product product = produtoService.fromDTO(productDTO);
         product.setId(id);
-        product = produtoService.atualizarProduto(product);
-        return ResponseEntity.noContent().build();
+        product = produtoService.atualizarProduto(id,product);
+        return ResponseEntity.ok().body(product);
     }
 
     @PatchMapping("/{id}/add-stock")
+    @Tag(name = "Adiciona no estoque", description = "adiciona no estoque por id")
     public ResponseEntity<Product> adicionarEstoque(@PathVariable Long id, @RequestBody EstoqueDTO estoqueDTO) {
-       Product product = produtoService.findById(id);
-       product.adicionarNoEstoque(estoqueDTO.getQuantidade());
-       produtoService.saveProduto(product);
+        Product product = produtoService.adicionarEstoque(id, estoqueDTO.getQuantidade());
         return ResponseEntity.ok().body(product);
     }
 
     @PatchMapping("/{id}/remove-stock")
+    @Tag(name = "Remove no estoque", description = "remove no estoque por id")
     public ResponseEntity<Product> removerEstoque(@PathVariable Long id, @RequestBody EstoqueDTO estoqueDTO) {
-       Product product = produtoService.findById(id);
-       product.removerNoEstoque(estoqueDTO.getQuantidade());
-       produtoService.saveProduto(product);
-        return  ResponseEntity.ok().body(product);
+        Product product = produtoService.removerEstoque(id, estoqueDTO.getQuantidade());
+        return ResponseEntity.ok().body(product);
+    }
+
+    @GetMapping("/{id}/available")
+    @Tag(name = "Verifica disponibilidade", description = "verifica no estoque por id")
+    public ResponseEntity<Boolean> isAvailable(@PathVariable Long id) {
+        boolean available = produtoService.isAvailable(id);
+        return ResponseEntity.ok(available);
     }
 }

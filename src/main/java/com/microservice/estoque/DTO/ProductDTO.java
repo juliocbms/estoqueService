@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record ProductDTO(UUID id, String nome, String descricao, BigDecimal preco, int quantidadeEstoque, LocalDateTime criadoEm, LocalDateTime atualizadoEm) {
+public record ProductDTO(Long id, String nome, String descricao, BigDecimal preco, int quantidadeEstoque, LocalDateTime criadoEm, LocalDateTime atualizadoEm) {
 
     public ProductDTO(Product product) {
         this(

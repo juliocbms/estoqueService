@@ -1,0 +1,9 @@
+CREATE TABLE tb_product (
+    id INTEGER PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    descricao VARCHAR(255) NOT NULL,
+    preco NUMERIC(19, 2) NOT NULL,
+    quantidade_estoque INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP
+);

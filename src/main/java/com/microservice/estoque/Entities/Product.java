@@ -2,20 +2,21 @@ package com.microservice.estoque.Entities;
 
 import jakarta.persistence.*;
 
+import java.lang.Long;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
+
 
 @Entity
 @Table(name = "tb_product")
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String nome;
     private String descricao;
     private BigDecimal preco;
@@ -26,7 +27,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(UUID id, String nome, String descricao, BigDecimal preco, int quantidadeEstoque, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Product(Long id, String nome, String descricao, BigDecimal preco, int quantidadeEstoque, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -36,11 +37,11 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

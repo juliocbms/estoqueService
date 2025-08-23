@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 public class ProdutoService {
@@ -28,7 +28,7 @@ public class ProdutoService {
         return productRepository.findAll();
     }
     
-    public Product findById(UUID id){
+    public Product findById(Long id){
         Optional<Product> produto = productRepository.findById(id);
         return produto.orElseThrow(()-> new ResourceNotFoundException(id));
     }
@@ -37,7 +37,7 @@ public class ProdutoService {
         return productRepository.save(product);
     }
 
-    public Product atualizarProduto(UUID id, Product product){
+    public Product atualizarProduto(Long id, Product product){
        try {
            Product newProduct = productRepository.getReferenceById(id);
            updateData(newProduct, product);
@@ -48,7 +48,7 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void deletarProduto(UUID id){
+    public void deletarProduto(Long id){
        try {
            productRepository.deleteById(id);
        } catch (EmptyResultDataAccessException e){
@@ -61,7 +61,7 @@ public class ProdutoService {
 
 
     @Transactional
-    public Product adicionarEstoque(UUID id, int quantidade) {
+    public Product adicionarEstoque(Long id, int quantidade) {
         try{
             Product produto = productRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException(id));
@@ -74,7 +74,7 @@ public class ProdutoService {
     }
 
     @Transactional
-    public Product removerEstoque(UUID id, int quantidade) {
+    public Product removerEstoque(Long id, int quantidade) {
         try{
             Product produto = productRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException(id));
@@ -86,7 +86,7 @@ public class ProdutoService {
         }
     }
 
-    public boolean isAvailable(UUID id ){
+    public boolean isAvailable(Long id ){
         try {
             Product product = productRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));

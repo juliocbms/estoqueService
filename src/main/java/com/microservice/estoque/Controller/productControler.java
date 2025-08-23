@@ -8,6 +8,7 @@ import com.microservice.estoque.Service.ProdutoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,6 +24,7 @@ public class productControler {
     private ProdutoService produtoService;
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @Tag(name = "Salvar Produtos", description = "salva produtos")
     public ResponseEntity<Product> insert (@RequestBody ProductDTO productDTO){
@@ -32,6 +34,7 @@ public class productControler {
                 .buildAndExpand(product.getId()).toUri();
         return ResponseEntity.created(uri).body(product);
     }
+
 
     @GetMapping
     @Tag(name = "Lista Produtos", description = "retorna uma lista de produtos")
@@ -48,6 +51,7 @@ public class productControler {
         return ResponseEntity.ok().body(product);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     @Tag(name = "Deletar Produtos", description = "deleta produtos")
     public ResponseEntity<Void> deletarById(@PathVariable Long id){
@@ -55,6 +59,7 @@ public class productControler {
        return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
     @Tag(name = "Atualizar Produtos", description = "atualiza produtos")
     public ResponseEntity<Product> atualizarProduto(@PathVariable Long id, @RequestBody ProductUpdateDTO productDTO){

@@ -1,86 +1,23 @@
 package com.microservice.estoque.DTO;
 
 import com.microservice.estoque.Entities.Product;
+import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-public class ProductDTO {
-
-    private Long id;
-    private String name;
-    private String descricao;
-    private BigDecimal price;
-    private int quantidadeEstoque;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    public ProductDTO() {
-    }
+public record ProductDTO(UUID id, String nome, String descricao, BigDecimal preco, int quantidadeEstoque, LocalDateTime criadoEm, LocalDateTime atualizadoEm) {
 
     public ProductDTO(Product product) {
-        id = product.getId();
-        name = product.getNome();
-        descricao = product.getDescricao();
-        price = product.getPreco();
-        quantidadeEstoque = product.getQuantidadeEstoque();
-        createdAt = product.getCreatedAt();
-        updatedAt = product.getUpdatedAt();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public int getQuantidadeEstoque() {
-        return quantidadeEstoque;
-    }
-
-    public void setQuantidadeEstoque(int quantidadeEstoque) {
-        this.quantidadeEstoque = quantidadeEstoque;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+        this(
+                product.getId(),
+                product.getNome(),
+                product.getDescricao(),
+                product.getPreco(),
+                product.getQuantidadeEstoque(),
+                product.getCreatedAt(),
+                product.getUpdatedAt()
+        );
     }
 }

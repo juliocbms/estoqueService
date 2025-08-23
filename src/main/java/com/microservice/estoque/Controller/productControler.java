@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,21 +45,21 @@ public class productControler {
 
     @GetMapping(value = "/{id}")
     @Tag(name = "Porduto por ID", description = "retorna um produto por Id")
-    public ResponseEntity<Product> findById(@PathVariable Long id){
+    public ResponseEntity<Product> findById(@PathVariable UUID id){
         Product product = produtoService.findById(id);
         return ResponseEntity.ok().body(product);
     }
 
     @DeleteMapping(value = "/{id}")
     @Tag(name = "Deletar Produtos", description = "deleta produtos")
-    public ResponseEntity<Void> deletarById(@PathVariable Long id){
+    public ResponseEntity<Void> deletarById(@PathVariable UUID id){
        produtoService.deletarProduto(id);
        return ResponseEntity.noContent().build();
     }
 
     @PutMapping(value = "/{id}")
     @Tag(name = "Atualizar Produtos", description = "atualiza produtos")
-    public ResponseEntity<Product> atualizarProduto(@PathVariable Long id, @RequestBody ProductUpdateDTO productDTO){
+    public ResponseEntity<Product> atualizarProduto(@PathVariable UUID id, @RequestBody ProductUpdateDTO productDTO){
         Product product = produtoService.fromUpdateDTO(productDTO);
         product.setId(id);
         product = produtoService.atualizarProduto(id,product);
@@ -67,21 +68,21 @@ public class productControler {
 
     @PatchMapping("/{id}/add-stock")
     @Tag(name = "Adiciona no estoque", description = "adiciona no estoque por id")
-    public ResponseEntity<Product> adicionarEstoque(@PathVariable Long id, @RequestBody EstoqueDTO estoqueDTO) {
-        Product product = produtoService.adicionarEstoque(id, estoqueDTO.getQuantidade());
+    public ResponseEntity<Product> adicionarEstoque(@PathVariable UUID id, @RequestBody EstoqueDTO estoqueDTO) {
+        Product product = produtoService.adicionarEstoque(id, estoqueDTO.quantidade());
         return ResponseEntity.ok().body(product);
     }
 
     @PatchMapping("/{id}/remove-stock")
     @Tag(name = "Remove no estoque", description = "remove no estoque por id")
-    public ResponseEntity<Product> removerEstoque(@PathVariable Long id, @RequestBody EstoqueDTO estoqueDTO) {
-        Product product = produtoService.removerEstoque(id, estoqueDTO.getQuantidade());
+    public ResponseEntity<Product> removerEstoque(@PathVariable UUID id, @RequestBody EstoqueDTO estoqueDTO) {
+        Product product = produtoService.removerEstoque(id, estoqueDTO.quantidade());
         return ResponseEntity.ok().body(product);
     }
 
     @GetMapping("/{id}/available")
     @Tag(name = "Verifica disponibilidade", description = "verifica no estoque por id")
-    public ResponseEntity<Boolean> isAvailable(@PathVariable Long id) {
+    public ResponseEntity<Boolean> isAvailable(@PathVariable UUID id) {
         boolean available = produtoService.isAvailable(id);
         return ResponseEntity.ok(available);
     }

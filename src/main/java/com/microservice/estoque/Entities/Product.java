@@ -7,14 +7,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tb_product")
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     private String nome;
     private String descricao;
     private BigDecimal preco;
@@ -25,7 +26,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String nome, String descricao, BigDecimal preco, int quantidadeEstoque, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Product(UUID id, String nome, String descricao, BigDecimal preco, int quantidadeEstoque, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -35,11 +36,11 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

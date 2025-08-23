@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProdutoService {
@@ -27,7 +28,7 @@ public class ProdutoService {
         return productRepository.findAll();
     }
     
-    public Product findById(Long id){
+    public Product findById(UUID id){
         Optional<Product> produto = productRepository.findById(id);
         return produto.orElseThrow(()-> new ResourceNotFoundException(id));
     }
@@ -36,7 +37,7 @@ public class ProdutoService {
         return productRepository.save(product);
     }
 
-    public Product atualizarProduto(Long id, Product product){
+    public Product atualizarProduto(UUID id, Product product){
        try {
            Product newProduct = productRepository.getReferenceById(id);
            updateData(newProduct, product);
@@ -47,7 +48,7 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void deletarProduto(Long id){
+    public void deletarProduto(UUID id){
        try {
            productRepository.deleteById(id);
        } catch (EmptyResultDataAccessException e){
@@ -60,7 +61,7 @@ public class ProdutoService {
 
 
     @Transactional
-    public Product adicionarEstoque(Long id, int quantidade) {
+    public Product adicionarEstoque(UUID id, int quantidade) {
         try{
             Product produto = productRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException(id));
@@ -73,7 +74,7 @@ public class ProdutoService {
     }
 
     @Transactional
-    public Product removerEstoque(Long id, int quantidade) {
+    public Product removerEstoque(UUID id, int quantidade) {
         try{
             Product produto = productRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException(id));
@@ -85,7 +86,7 @@ public class ProdutoService {
         }
     }
 
-    public boolean isAvailable(Long id ){
+    public boolean isAvailable(UUID id ){
         try {
             Product product = productRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
@@ -105,14 +106,14 @@ public class ProdutoService {
     }
 
     public Product fromDTO(ProductDTO productDTO){
-        return  new Product(productDTO.getId(), productDTO.getName(), productDTO.getDescricao(), productDTO.getPrice(), productDTO.getQuantidadeEstoque(),productDTO.getCreatedAt(),null);
+        return  new Product(productDTO.id(), productDTO.nome(), productDTO.descricao(), productDTO.preco(), productDTO.quantidadeEstoque(),productDTO.criadoEm(),null);
     }
 
     public Product fromUpdateDTO(ProductUpdateDTO dto) {
         Product product = new Product();
-        product.setNome(dto.getName());
-        product.setDescricao(dto.getDescricao());
-        product.setPreco(dto.getPrice());
+        product.setNome(dto.nome());
+        product.setDescricao(dto.descricao());
+        product.setPreco(dto.preco());
         return product;
     }
 }

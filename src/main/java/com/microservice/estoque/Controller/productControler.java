@@ -5,8 +5,12 @@ import com.microservice.estoque.DTO.ProductDTO;
 import com.microservice.estoque.DTO.ProductUpdateDTO;
 import com.microservice.estoque.Entities.Product;
 import com.microservice.estoque.Service.ProdutoService;
+import com.microservice.estoque.Service.exception.DatabaseException;
+import com.microservice.estoque.Service.exception.EstoqueInsuficienteException;
+import com.microservice.estoque.Service.exception.ResourceNotFoundException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -85,8 +89,16 @@ public class productControler {
 
     @GetMapping("/{id}/available")
     @Tag(name = "Verifica disponibilidade", description = "verifica no estoque por id")
-    public ResponseEntity<Boolean> isAvailable(@PathVariable Long id) {
-        boolean available = produtoService.isAvailable(id);
-        return ResponseEntity.ok(available);
+    public ResponseEntity<Boolean> isAvailable(@PathVariable Long id, @RequestParam int quantidade) {
+        try {
+            boolean available = produtoService.isAvailable(id, quantidade);
+            return ResponseEntity.ok(available);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+        } catch (EstoqueInsuficienteException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+        } catch (DatabaseException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
     }
 }

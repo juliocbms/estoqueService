@@ -6,6 +6,7 @@ import com.microservice.estoque.Entities.Product;
 import com.microservice.estoque.Repositories.ProductRepository;
 
 import com.microservice.estoque.Service.exception.DatabaseException;
+import com.microservice.estoque.Service.exception.EstoqueInsuficienteException;
 import com.microservice.estoque.Service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -86,15 +87,17 @@ public class ProdutoService {
         }
     }
 
-    public boolean isAvailable(Long id ){
+    public boolean isAvailable(Long id, int quantidade ){
         try {
             Product product = productRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
-            return product.getQuantidadeEstoque() > 0;
-        }  catch (DataIntegrityViolationException e){
-            throw  new DatabaseException(e.getMessage());
+            if (quantidade > product.getQuantidadeEstoque()) {
+                throw new EstoqueInsuficienteException("quantidade é maior do que a quantidade em estoque");
+            }
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
         }
-
     }
 
     private void updateData(Product newProduct, Product product){

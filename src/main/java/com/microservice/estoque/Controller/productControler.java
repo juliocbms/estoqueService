@@ -16,6 +16,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,6 +87,14 @@ public class productControler {
     public ResponseEntity<Product> removerEstoque(@PathVariable Long id, @RequestBody EstoqueDTO estoqueDTO) {
         Product product = produtoService.removerEstoque(id, estoqueDTO.quantidade());
         return ResponseEntity.ok().body(product);
+    }
+
+    @GetMapping("/{id}/price")
+    @Tag(name = "Verifica preço", description = "verifica preço no estoque por id")
+    public ResponseEntity<BigDecimal> getPriceById(@PathVariable Long id){
+        return produtoService.getPriceById(id)
+                .map(price -> ResponseEntity.ok(price))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/{id}/available")

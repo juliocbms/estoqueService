@@ -11,9 +11,11 @@ import com.microservice.estoque.Service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -98,6 +100,11 @@ public class ProdutoService {
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
         }
+    }
+
+    public Optional<BigDecimal> getPriceById(Long id) {
+        return productRepository.findById(id)
+                .map(Product::getPreco);
     }
 
     private void updateData(Product newProduct, Product product){

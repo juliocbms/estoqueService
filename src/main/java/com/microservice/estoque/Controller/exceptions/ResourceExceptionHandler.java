@@ -1,6 +1,7 @@
 package com.microservice.estoque.Controller.exceptions;
 
 import com.microservice.estoque.Service.exception.DatabaseException;
+import com.microservice.estoque.Service.exception.EstoqueInsuficienteException;
 import com.microservice.estoque.Service.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,14 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> database(DatabaseException e, HttpServletRequest request){
         String error = "Database error";
         HttpStatus status =HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(),status.value(),error,e.getMessage(),request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(EstoqueInsuficienteException.class)
+    public ResponseEntity<StandardError> estoqueInsuficiente(EstoqueInsuficienteException e, HttpServletRequest request){
+        String error = "Business rule validation error";
+        HttpStatus status = HttpStatus.BAD_REQUEST; // 400 Bad Request
         StandardError err = new StandardError(Instant.now(),status.value(),error,e.getMessage(),request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }

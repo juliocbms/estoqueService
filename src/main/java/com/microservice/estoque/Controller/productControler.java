@@ -75,6 +75,7 @@ public class productControler {
         return ResponseEntity.ok().body(product);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/add-stock")
     @Tag(name = "Adiciona no estoque", description = "adiciona no estoque por id")
     public ResponseEntity<Product> adicionarEstoque(@PathVariable Long id, @RequestBody EstoqueDTO estoqueDTO) {
@@ -82,13 +83,7 @@ public class productControler {
         return ResponseEntity.ok().body(product);
     }
 
-    @PatchMapping("/{id}/remove-stock")
-    @Tag(name = "Remove no estoque", description = "remove no estoque por id")
-    public ResponseEntity<Product> removerEstoque(@PathVariable Long id, @RequestBody EstoqueDTO estoqueDTO) {
-        Product product = produtoService.removerEstoque(id, estoqueDTO.quantidade());
-        return ResponseEntity.ok().body(product);
-    }
-
+    @PreAuthorize("hasRole('ROLE_SERVICE')")
     @GetMapping("/{id}/price")
     @Tag(name = "Verifica preço", description = "verifica preço no estoque por id")
     public ResponseEntity<BigDecimal> getPriceById(@PathVariable Long id){
@@ -97,6 +92,7 @@ public class productControler {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ROLE_SERVICE')")
     @GetMapping("/{id}/available")
     @Tag(name = "Verifica disponibilidade", description = "verifica no estoque por id")
     public ResponseEntity<Boolean> isAvailable(@PathVariable Long id, @RequestParam int quantidade) {

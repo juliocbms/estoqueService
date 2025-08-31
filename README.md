@@ -1,4 +1,3 @@
-```markdown
 # Microsserviço de Gestão de Estoque
 
 Este microserviço é responsável por gerenciar o catálogo de produtos, controlar o estoque e fornecer informações de disponibilidade para outros serviços. Seu design é focado em alta resiliência, utilizando um padrão de comunicação assíncrona para não depender da disponibilidade imediata de outros serviços.
